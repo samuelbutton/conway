@@ -20,15 +20,16 @@ private:
 	void copyBoard();
 public:
 	Board(int rows, int cols, double chanceOfLife);
+	Board(int rows, int cols, int *board);
+	Board(char *filename);
 	void update();
-	void setBoard(int *newBoard);
 //	void setDead(int row, int col);
 //	void setAlive(int row, int col);
 	void toString();
 	void prettyPrint();
 	virtual ~Board();
 private:
-	void setBoard(double chanceOfLife);
+	void setRandBoard(double chanceOfLife);
 };
 
 } /* namespace samsPackage */

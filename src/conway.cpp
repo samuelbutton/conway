@@ -11,26 +11,9 @@
 using namespace std;
 using namespace samsPackage;
 
-int main() {
-	srand(time(NULL));
-
-//	runTests();
-
-	Board halfBoard(50, 200, 0.3);
-	halfBoard.toString();
-
-	while (true) {
-		halfBoard.prettyPrint();
-		halfBoard.update();
-	}
-	halfBoard.prettyPrint();
-
-	return 0;
-}
-
-void runTests() {
+void static runTests() {
 	// Test 1
-	Board deadBoard(3, 3, 0);
+	Board deadBoard(3, 3, 0.0);
 	deadBoard.toString();
 	deadBoard.prettyPrint();
 	deadBoard.update();
@@ -38,11 +21,38 @@ void runTests() {
 
 	// Test 2
 	int testBoardVals[] = { 0, 0, 1, 0, 1, 1, 0, 0, 0 };
-	Board testBoard(3, 3, 0);
-	testBoard.setBoard(testBoardVals);
+	Board testBoard(3, 3, testBoardVals);
 	testBoard.toString();
 	testBoard.prettyPrint();
 	testBoard.update();
 	testBoard.prettyPrint();
 
 }
+
+int main() {
+	srand(time(NULL));
+
+	runTests();
+
+	char *filename = (char*) "ggg.txt";
+	Board randBoard(filename);
+	randBoard.toString();
+
+	while (true) {
+		randBoard.prettyPrint();
+		randBoard.update();
+	}
+	randBoard.prettyPrint();
+
+//	Board randBoard(50, 200, 0.3);
+//	randBoard.toString();
+//
+//	while (true) {
+//		randBoard.prettyPrint();
+//		randBoard.update();
+//	}
+//	randBoard.prettyPrint();
+
+	return 0;
+}
+

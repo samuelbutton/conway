@@ -9,6 +9,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 namespace samsPackage {
 
@@ -17,9 +20,46 @@ Board::Board(int rows, int cols, double chanceOfLife) {
 	m_cols = cols;
 	m_board = new int[rows * cols * sizeof(int)];
 	m_copy = new int[rows * cols * sizeof(int)];
-	setBoard(chanceOfLife);
+	setRandBoard(chanceOfLife);
 }
-void Board::setBoard(double chanceOfLife) {
+
+Board::Board(int rows, int cols, int *board) {
+	m_rows = rows;
+	m_cols = cols;
+	m_board = new int[rows * cols * sizeof(int)];
+	for (int i = 0; i < m_rows; i++) {
+		for (int j = 0; j < m_cols; j++) {
+			m_board[i * m_cols + j] = board[i * m_cols + j];
+		}
+	}
+	m_copy = new int[rows * cols * sizeof(int)];
+}
+
+Board::Board(char *filename) {
+
+	std::ifstream infile(filename);
+
+	m_rows = 0;
+	m_cols = 0;
+	std::string line;
+	std::getline(infile, line);
+	std::istringstream iss(line);
+	if (!(iss >> m_rows >> m_cols)) {
+		return;
+	}
+	m_board = new int[m_rows * m_cols * sizeof(int)];
+	for (int i = 0; i < m_rows; i++) {
+		std::getline(infile, line);
+		std::istringstream iss(line);
+		for (int j = 0; j < m_cols; j++) {
+			iss >> m_board[i * m_cols + j];
+		}
+	}
+
+	m_copy = new int[m_rows * m_cols * sizeof(int)];
+}
+
+void Board::setRandBoard(double chanceOfLife) {
 	for (int i = 0; i < m_rows; i++) {
 		for (int j = 0; j < m_cols; j++) {
 			if ((rand() * (1.0)) / RAND_MAX < chanceOfLife)
@@ -87,22 +127,6 @@ void Board::update() {
 	m_copy = temp;
 }
 
-void Board::setBoard(int *newBoard) {
-	for (int i = 0; i < m_rows; i++) {
-		for (int j = 0; j < m_cols; j++) {
-			m_board[i * m_cols + j] = newBoard[i * m_cols + j];
-		}
-	}
-}
-
-//void Board::setDead(int row, int col) {
-//	board[row * cols + col] = 0;
-//}
-//
-//void Board::setAlive(int row, int col) {
-//	board[row * cols + col] = 1;
-//}
-
 void Board::toString() {
 	printf("[");
 	for (int i = 0; i < m_rows; i++) {
@@ -119,13 +143,15 @@ void Board::toString() {
 	printf("]\n");
 }
 
-void Board::prettyPrint() {
-// can be refactored [1]
-	for (int j = 0; j < m_cols + 2; j++) {
+void printHorLine(int times) {
+	for (int j = 0; j < times; j++) {
 		printf("-");
 	}
 	printf("\n");
+}
 
+void Board::prettyPrint() {
+	printHorLine(m_cols + 2);
 	for (int i = 0; i < m_rows; i++) {
 		printf("|");
 		for (int j = 0; j < m_cols; j++) {
@@ -136,18 +162,13 @@ void Board::prettyPrint() {
 		}
 		printf("|\n");
 	}
-
-// can be refactored [1]
-	for (int j = 0; j < m_cols + 2; j++) {
-		printf("-");
-	}
-	printf("\n");
+	printHorLine(m_cols + 2);
 }
 
 Board::~Board() {
 	delete[] m_board;
 	delete[] m_copy;
-	printf("Deconstructor called successfully");
+	printf("Deconstructor called successfully\n");
 }
 
 } /* namespace samsPackage */
